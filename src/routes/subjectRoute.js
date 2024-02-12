@@ -1,17 +1,17 @@
 import express from "express";
-import { Major } from "../models/majorModel.js"
+import { Subject } from "../models/subjectModel.js"
 
 const router = express.Router();
 
-// Route for Save new Major
+// Route for Save new Subject
 router.post("/", async (request, response) => {
   try {
     if (!request.body.name) {
       return response.status(400).send({ message: "Send all required fields: name" });
     }
-    const newMajor = { name: request.body.name };
-    const major = await Major.create(newMajor);
-    return response.status(201).send(major);
+    const newSubject = { name: request.body.name };
+    const subject = await Subject.create(newSubject);
+    return response.status(201).send(subject);
     
   } catch (error) {
     console.log(error.message);
@@ -19,12 +19,12 @@ router.post("/", async (request, response) => {
   }
 });
 
-// Route for Get All Major
+// Route for Get All Subject
 router.get("/", async (request, response) => {
   try {
-    const majors = await Major.find({});
+    const subjects = await Subject.find({});
     return response.status(200).json({
-      data: majors
+      data: subjects
     });
   } catch (error) {
     console.log(error.message);
@@ -32,22 +32,22 @@ router.get("/", async (request, response) => {
   }
 })
 
-// Route for Get Major by Id
+// Route for Get Subject by Id
 router.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const major = await Major.findById(id);
-    if (!major) {
-      return response.status(404).send({ message: "Major not found!" });
+    const subject = await Subject.findById(id);
+    if (!subject) {
+      return response.status(404).send({ message: "Subject not found!" });
     }
-    return response.status(200).json(major)
+    return response.status(200).json(subject)
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });
   }
 });
 
-// Route for Update Major
+// Route for Update Subject
 router.put("/:id", async (request, response) => {
   try {
     if (!request.body.name) {
@@ -56,28 +56,28 @@ router.put("/:id", async (request, response) => {
       });
     }
     const { id } = request.params;
-    const result = await Major.findByIdAndUpdate(id, request.body);
+    const result = await Subject.findByIdAndUpdate(id, request.body);
     
     if (!result) {
-      return response.status(404).send({ message: "Major not found!" });
+      return response.status(404).send({ message: "Subject not found!" });
     }
-    return response.status(200).send({ message: "Major updated successfully" });
+    return response.status(200).send({ message: "Subject updated successfully" });
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });
   }
 });
 
-// Route for Delete Major
+// Route for Delete Subject
 router.delete("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const result = await Major.findByIdAndDelete(id, request.body);
+    const result = await Subject.findByIdAndDelete(id, request.body);
 
     if (!result) {
-      return response.status(404).send({ message: "Major not found!" });
+      return response.status(404).send({ message: "Subject not found!" });
     }
-    return response.status(200).send({ message: "Major deleted successfully!" })
+    return response.status(200).send({ message: "Subject deleted successfully!" })
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });

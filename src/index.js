@@ -2,6 +2,7 @@ import express from "express";
 import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
 import majorRoute from "./routes/majorRoute.js"
+import subjectRoute from "./routes/subjectRoute.js"
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.get("/", (request, response) => {
 });
 
 app.use("/major", majorRoute);
+app.use("/subject", subjectRoute)
 
 mongoose
   .connect(mongoDBURL)

@@ -1,9 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const userSchema = mongoose.Schema(
   {
     major: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       ref: "Major"
     },
     student_id: {

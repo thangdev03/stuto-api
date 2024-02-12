@@ -1,9 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const accountSchema = mongoose.Schema(
     {
-        owner: {
-            type: Schema.Types.ObjectId,
+        user_id: {
+            type: mongoose.Schema.ObjectId,
             ref: "User",
             required: true
         },
