@@ -36,6 +36,11 @@ const roomSchema = mongoose.Schema(
                 join_at: {
                     type: Date,
                     default: Date.now
+                },
+                role: {
+                    type: String,
+                    enum: ["owner", "member"],
+                    default: "member"
                 }
             }
         ]

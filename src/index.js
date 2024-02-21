@@ -3,11 +3,14 @@ import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
 import majorRoute from "./routes/majorRoute.js"
 import subjectRoute from "./routes/subjectRoute.js"
+import userRoute from "./routes/userRoute.js"
+import cors from "cors"
 
 const app = express();
 
 // Middleware for parsing request body
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (request, response) => {
   console.log(request);
@@ -15,7 +18,8 @@ app.get("/", (request, response) => {
 });
 
 app.use("/major", majorRoute);
-app.use("/subject", subjectRoute)
+app.use("/subject", subjectRoute);
+app.use("/user", userRoute);
 
 mongoose
   .connect(mongoDBURL)

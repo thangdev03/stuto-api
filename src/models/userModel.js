@@ -4,39 +4,42 @@ const userSchema = mongoose.Schema(
   {
     major: {
       type: mongoose.Schema.ObjectId,
-      ref: "Major"
+      ref: "Major",
+      default: null
     },
     student_id: {
       type: String,
+      default: null
     },
     name: {
       type: String,
       required: true,
     },
-    email: {
-      type: String,
-    },
     date_of_birth: {
       type: Date,
+      default: null
     },
     sex: {
       type: String,
       enum: ["Nam", "Nữ", "Khác"],
-      required: true,
+      default: "Nam"
     },
     location: {
       type: String,
+      default: null
     },
     avatar: {
       type: String,
+      default: null
     },
     study_program: {
       type: String,
       enum: ["Chính quy", "Tiên tiến", "Quốc tế"],
+      default: "Chính quy"
     },
     is_active: {
       type: Boolean,
-      default: True,
+      default: true,
     },
   },
   {
