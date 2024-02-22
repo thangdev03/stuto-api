@@ -1,6 +1,8 @@
 import express from "express"
+import bcrypt from "bcryptjs"
 import { User } from "../models/userModel.js"
 import { Account } from "../models/accountModel.js";
+
 
 const router = express.Router();
 
@@ -15,15 +17,14 @@ router.post("/register", async (request, response) => {
         return response.status(400).send({ message: "Email existed, please use another email" })
       }
       
-      // response.send(request.body.name)
-
       const newUser = { name: request.body.name };
       const user = await User.create(newUser);
+      const newPassword = await bcrypt.hash(request.body.password, 16)
 
       await Account.create({
           user_id: user.id,
           email: request.body.email,
-          password: request.body.password,
+          password: newPassword,
           role: request.body.role
       });
       
