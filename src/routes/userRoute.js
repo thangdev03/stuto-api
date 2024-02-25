@@ -14,7 +14,7 @@ router.post("/register", async (request, response) => {
       }
       const existingEmail = await Account.findOne({email: request.body.email});
       if (existingEmail) {
-        return response.status(400).send({ message: "Email existed, please use another email" })
+        return response.status(400).send({ message: "Email này đã tồn tại, vui lòng kiểm tra lại" })
       }
       
       const newUser = { name: request.body.name };
@@ -28,7 +28,7 @@ router.post("/register", async (request, response) => {
           role: request.body.role
       });
       
-      return response.status(201).send({ message: "User created successfully!" });
+      return response.status(201).send({ message: "Tạo tài khoản thành công" });
   } catch (error) {
       console.log(error.message);
       response.status(500).send({ message: error.message });
