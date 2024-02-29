@@ -38,7 +38,18 @@ router.post("/register", async (request, response) => {
 // Route for Get all User
 router.get("/", async (request, response) => {
   try {
-    const users = await User.find({});
+    const usersList = await User.find({});
+    const users = []
+    for (const index in usersList) {
+      const account = await Account.findOne({user_id: usersList[index].id})
+      if (account.role === "client") {
+        users.push({
+          info: usersList[index],
+          email: account.email,
+          is_restricted: account.is_restricted
+        })
+      } 
+    }
     return response.status(200).json({
       data: users
     });

@@ -60,5 +60,22 @@ router.post('/login', async (request, response) => {
   }
 });
 
+router.put("/", async (request, response) => {
+  try {
+    var result;
+    if (request.body.update_restrict == true) {
+      result = await Account.findOneAndUpdate({user_id: request.body.user_id}, {$set: {is_restricted: request.body.is_restricted}});
+    }
+    console.log(request.body.user_id + ": " + request.body.is_restricted);
+    if (!result) {
+      return response.status(404).send({ message: "User not found!" });
+    }
+    return response.status(200).send({ message: "User updated successfully" })
+  } catch (error) {
+    console.log(error.message);
+    response.status(500).send({ message: error.message })
+  }
+});
+
 
 export default router;

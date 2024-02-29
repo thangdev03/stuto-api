@@ -20,6 +20,10 @@ const accountSchema = mongoose.Schema(
             type: String,
             default: "client",
             enum: ["admin", "client"]
+        },
+        is_restricted: {
+            type: Boolean,
+            default: false
         }
     },
     {
