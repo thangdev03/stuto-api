@@ -15,7 +15,7 @@ app.use(cors());
 
 app.get("/", (request, response) => {
   console.log(request);
-  return response.status(234).send("Hello World");
+  return response.status(234).send("This is API of StuTo App - belongs to ThangDev03");
 });
 
 app.use("/major", majorRoute);
