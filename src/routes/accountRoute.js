@@ -29,8 +29,9 @@ router.post('/login', async (request, response) => {
     account.password
   );
 
+  let token = null;
   if (isPasswordValid) {
-    const token = jwt.sign(
+    token = jwt.sign(
       {
         email: account.email,
         name: user.name,
@@ -54,7 +55,7 @@ router.post('/login', async (request, response) => {
       } 
     );
     result? console.log("update success", result) : console.log("update failed")
-    return response.status(200).json({ token: token, name: user.name, role: account.role })
+    return response.status(200).json({ token: token, name: user.name, role: account.role, id: user._id })
   } else {
     return response.status(404).json({ token: false })
   }
