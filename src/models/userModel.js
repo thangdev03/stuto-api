@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema(
     },
     date_of_birth: {
       type: Date,
-      default: null
+      default: Date.now
     },
     sex: {
       type: String,

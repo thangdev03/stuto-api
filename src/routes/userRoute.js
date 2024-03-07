@@ -2,7 +2,7 @@ import express from "express"
 import bcrypt from "bcryptjs"
 import { User } from "../models/userModel.js"
 import { Account } from "../models/accountModel.js";
-
+import { Major } from "../models/majorModel.js";
 
 const router = express.Router();
 
@@ -64,10 +64,11 @@ router.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
     const user = await User.findById(id);
+    const majorOfUser = await Major.findById(await user.major);
     if (!user) {
       return response.status(404).send({ message: "User not found!" });
     }
-    return response.status(200).json(user)
+    return response.status(200).json({user, majorOfUser})
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message })
@@ -77,11 +78,18 @@ router.get("/:id", async (request, response) => {
 // Route for Update User
 router.put("/:id", async (request, response) => {
   try {
-    if (!request.body.major || !request.body.student_id || !request.body.name || !request.body.date_of_birth || !request.body.sex || !request.body.study_program) {
-      return response.status(400).send({ message: "Send all fields required" });
+    const query = {
+      major: request.body.major,
+      student_id: request.body.student_id,
+      name: request.body.name,
+      date_of_birth: request.body.date_of_birth,
+      sex: request.body.sex,
+      location: request.body.location,
+      avatar: request.body.avatar,
+      study_program: request.body.study_program
     }
     const { id } = request.params;
-    const result = await User.findByIdAndUpdate(id, request.body);
+    const result = await User.findByIdAndUpdate(id, {$set: query});
     if (!result) {
       return response.status(404).send({ message: "User not found!" });
     }
