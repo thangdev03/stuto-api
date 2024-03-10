@@ -5,6 +5,8 @@ import majorRoute from "./routes/majorRoute.js"
 import subjectRoute from "./routes/subjectRoute.js"
 import userRoute from "./routes/userRoute.js"
 import accountRoute from "./routes/accountRoute.js"
+import conversationRoute from"./routes/conversationRoute.js"
+import messageRoute from"./routes/messageRoute.js"
 import cors from "cors"
 
 const app = express();
@@ -22,6 +24,8 @@ app.use("/major", majorRoute);
 app.use("/subject", subjectRoute);
 app.use("/user", userRoute);
 app.use("/account", accountRoute);
+app.use("/conversations", conversationRoute);
+app.use("/messages", messageRoute);
 
 mongoose
   .connect(mongoDBURL)

@@ -63,12 +63,12 @@ router.get("/", async (request, response) => {
 router.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const user = await User.findById(id);
-    const majorOfUser = await Major.findById(await user.major);
+    const user = await User.findById(id).populate("major");
+    // const majorOfUser = await Major.findById(await user.major); //Sửa lại dùng populate
     if (!user) {
       return response.status(404).send({ message: "User not found!" });
     }
-    return response.status(200).json({user, majorOfUser})
+    return response.status(200).json(user)
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message })

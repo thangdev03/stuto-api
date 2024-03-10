@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 
 const friendshipSchema = mongoose.Schema(
   {
-    user1: {
-      type: mongoose.Schema.ObjectId,
-      ref: "User",
-      required: true,
+    sender: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+        required: true,
     },
-    user2: {
+    receiver: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
       required: true,
@@ -15,8 +15,8 @@ const friendshipSchema = mongoose.Schema(
     status: {
       type: String,
       enum: ["pending", "accepted"],
-      default: "pending",
-    },
+      default: "pending"
+    }
   },
   {
     timestamps: true,
