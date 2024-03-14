@@ -15,7 +15,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
     methods: ["POST", "GET"]
   }
 });
@@ -73,7 +73,7 @@ io.on("connection", (socket) => {
   //Send and get messages
   socket.on("sendMessage", ({senderId, receiverId, text}) => {
     const user = getUser(receiverId);
-    io.to(user.socketId).emit("getMessage", {
+    io.to(user?.socketId).emit("getMessage", {
       senderId,
       text
     })
