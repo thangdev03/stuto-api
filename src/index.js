@@ -1,6 +1,8 @@
 import express from "express";
 import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
+import { createServer } from "http"
+import { Server } from "socket.io"
 import majorRoute from "./routes/majorRoute.js"
 import subjectRoute from "./routes/subjectRoute.js"
 import userRoute from "./routes/userRoute.js"
@@ -10,13 +12,20 @@ import messageRoute from"./routes/messageRoute.js"
 import cors from "cors"
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["POST", "GET"]
+  }
+});
 
 // Middleware for parsing request body
 app.use(express.json());
 app.use(cors());
 
 app.get("/", (request, response) => {
-  console.log(request);
+  // console.log(request);
   return response.status(234).send("This is API of StuTo App - belongs to ThangDev03");
 });
 
@@ -31,10 +40,53 @@ mongoose
   .connect(mongoDBURL)
   .then(() => {
     console.log("App connected to database");
-    app.listen(PORT, () => {
-      console.log(`App is listening to port ${PORT}`);
-    });
   })
   .catch((error) => {
     console.log(error);
   });
+
+let users = [];
+
+// Check if user exist in users
+const addUser = (userId, socketId) => {
+  !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId });
+}
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+}
+
+const getUser = (userId) => {
+  return users.find((user) => user.userId === userId)
+}
+
+io.on("connection", (socket) => {
+  // console.log("An user connected");
+
+  //Get userId and socketId from users
+  socket.on("addUser", userId => {
+    addUser(userId, socket.id);
+    io.emit("getUsers", users);
+  })
+
+  //Send and get messages
+  socket.on("sendMessage", ({senderId, receiverId, text}) => {
+    const user = getUser(receiverId);
+    io.to(user.socketId).emit("getMessage", {
+      senderId,
+      text
+    })
+  })
+
+  //User disconnect
+  socket.on("disconnect", () => {
+    // console.log("An user disconnected!!");
+    removeUser(socket.id)
+    io.emit("getUsers", users);
+  })
+})
+
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
