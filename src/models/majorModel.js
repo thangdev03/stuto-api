@@ -6,6 +6,11 @@ const majorSchema = mongoose.Schema(
             type: String,
             required: true,
             unique: true
+        },
+        study_program: {
+            type: String,
+            enum: ["Chính quy", "Tiên tiến", "Quốc tế"],
+            default: "Chính quy"
         }
     }
 );

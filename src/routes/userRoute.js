@@ -2,7 +2,8 @@ import express from "express"
 import bcrypt from "bcryptjs"
 import { User } from "../models/userModel.js"
 import { Account } from "../models/accountModel.js";
-import { Major } from "../models/majorModel.js";
+import { Message } from "../models/messageModel.js";
+import { Conversation } from "../models/conversationModel.js";
 
 const router = express.Router();
 
@@ -38,11 +39,12 @@ router.post("/register", async (request, response) => {
 // Route for Get all User
 router.get("/", async (request, response) => {
   try {
-    const usersList = await User.find({});
+    const usersList = await User.find({}).populate("major");
+    console.log(usersList)
     const users = []
     for (const index in usersList) {
-      const account = await Account.findOne({user_id: usersList[index].id})
-      if (account.role === "client") {
+      const account = await Account.findOne({user_id: usersList[index].id});
+      if (account && account.role === "client") {
         users.push({
           info: usersList[index],
           email: account.email,
@@ -104,15 +106,17 @@ router.put("/:id", async (request, response) => {
 router.delete("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const result1 = await User.findByIdAndDelete(id, request.body);
+    const result1 = await User.findByIdAndDelete(id);
     const result2 = await Account.findOneAndDelete({user_id: id})
-    if (!result1 || !result2) {
+    const result3 = await Message.deleteMany({sender: id});
+    const result4 = await Conversation.deleteMany({members: {$in: [id]}});
+    if (!result1 || !result2 || !result3 || !result4) {
       return response.status(404).send({ message: "Something went wrong!" });
     }
     return response.status(200).send({ message: "User deleted successfully" })
   } catch (error) {
     console.log(error.message);
-    response.status(500).send({ message: error.message })
+    return response.status(500).send({ message: error.message })
   }
 });
 
