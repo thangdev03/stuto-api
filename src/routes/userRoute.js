@@ -40,7 +40,6 @@ router.post("/register", async (request, response) => {
 router.get("/", async (request, response) => {
   try {
     const usersList = await User.find({}).populate("major");
-    console.log(usersList)
     const users = []
     for (const index in usersList) {
       const account = await Account.findOne({user_id: usersList[index].id});

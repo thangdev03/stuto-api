@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const friendshipSchema = mongoose.Schema(
+const invitationSchema = mongoose.Schema(
   {
     sender: {
         type: mongoose.Schema.ObjectId,
@@ -11,6 +11,9 @@ const friendshipSchema = mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
       required: true,
+    },
+    note: {
+      type: String
     },
     status: {
       type: String,
@@ -23,4 +26,4 @@ const friendshipSchema = mongoose.Schema(
   }
 );
 
-export const Friendship = mongoose.model("Friendship", friendshipSchema);
+export const Invitation = mongoose.model("Invitation", invitationSchema);
