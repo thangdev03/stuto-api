@@ -55,7 +55,7 @@ router.post('/login', async (request, response) => {
       } 
     );
     result? console.log("update success", result) : console.log("update failed")
-    return response.status(200).json({ token: token, name: user.name, role: account.role, id: user._id })
+    return response.status(200).json({ token: token, name: user.name, role: account.role, id: user._id, avatar: user.avatar })
   } else {
     return response.status(404).json({ token: false })
   }

@@ -65,7 +65,6 @@ router.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
     const user = await User.findById(id).populate("major");
-    // const majorOfUser = await Major.findById(await user.major); //Sửa lại dùng populate
     if (!user) {
       return response.status(404).send({ message: "User not found!" });
     }
