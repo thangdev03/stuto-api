@@ -9,7 +9,9 @@ router.get("/:userId", async (request, response) => {
     try {
         const { userId } = request.params;
         const user = await User.findById(userId).populate("friends");
-        const friendsList = await user.friends;
+        const populatedUser = await User.populate(user, {path: "friends", populate: {path: "major"}});
+        const friendsList = await populatedUser.friends;
+        console.log(friendsList)
         return response.status(200).send(friendsList);
     } catch (error) {
         console.log(error.message);
