@@ -4,15 +4,15 @@ import { User } from "../models/userModel.js";
 
 const router = express.Router();
 
-// Get all invitations sent to an user
+// Get all pending invitations sent to an user
 router.get("/:userId", async (request, response) => {
     try {
         const { userId } = request.params;
-        const invitations = await Invitation.find({receiver: userId});
+        const invitations = await Invitation.find({receiver: userId, status: "pending"}).populate("sender");
         if (invitations.length === 0) {
             return response.status(404).send({ message: "Not found any invitations!" });
         }
-        return response.status(200).json(invitations);
+        return response.status(200).send(invitations);
     } catch (error) {
         console.log(error.message);
         return response.status(500).send({ message: error.message });
