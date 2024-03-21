@@ -19,6 +19,21 @@ router.get("/:userId", async (request, response) => {
     }
 });
 
+// Get all invitations sent by an user
+router.get("/sent/:userId", async (request, response) => {
+    try {
+        const { userId } = request.params;
+        const invitations = await Invitation.find({sender: userId, status: "pending"});
+        if (invitations.length === 0) {
+            return response.status(404).send({ message: "Not found any invitations!" });
+        }
+        return response.status(200).send(invitations);
+    } catch (error) {
+        console.log(error.message);
+        return response.status(500).send({ message: error.message });
+    }
+});
+
 // Send invitation
 router.post("/send", async (request, response) => {
     try {
