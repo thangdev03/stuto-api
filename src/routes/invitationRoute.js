@@ -1,6 +1,7 @@
 import express, { request, response } from "express"
 import { Invitation } from "../models/invitationModel.js";
 import { User } from "../models/userModel.js";
+import { Conversation } from "../models/conversationModel.js";
 
 const router = express.Router();
 
@@ -60,7 +61,14 @@ router.put("/accept/:invitationId", async (request, response) => {
         }
         const user1 = await User.findByIdAndUpdate(invitation.sender, {$push: {friends: invitation.receiver}});
         const user2 = await User.findByIdAndUpdate(invitation.receiver, {$push: {friends: invitation.sender}});
-        return user1 && user2 && response.status(200).send({ message: "Friendship created successfully" });
+        const newConversation = await Conversation.create({members: [
+            await invitation.sender,
+            await invitation.receiver
+        ]});
+        console.log("sender: ", invitation.sender);
+        console.log("receiver: ", invitation.receiver);
+        console.log(newConversation);
+        return user1 && user2 && newConversation && response.status(200).send({ message: "Friendship created successfully" });
     } catch (error) {
         console.log(error.message);
         return response.status(500).send({ message: error.message });

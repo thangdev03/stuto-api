@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/", async (request, response) => {
   try {
     const newConversation = new Conversation({
-        members: request.body.members
+      members: request.body.members
     })
     const conversation = await newConversation.save();
     return response.status(201).json(conversation);
