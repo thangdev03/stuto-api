@@ -90,9 +90,9 @@ router.put("/:id", async (request, response) => {
     }
     const { id } = request.params;
     const result = await User.findByIdAndUpdate(id, {$set: query});
-    if (!result) {
-      return response.status(404).send({ message: "User not found!" });
-    }
+    // if (!result) {
+    //   return response.status(404).send({ message: "User not found!" });
+    // }
     return response.status(200).send({ message: "User updated successfully" })
   } catch (error) {
     console.log(error.message);

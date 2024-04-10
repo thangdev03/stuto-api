@@ -10,7 +10,7 @@ const reportSchema = mongoose.Schema(
         target_url: {
             type: String,
         },
-        discription: {
+        description: {
             type: String,
             required: True
         },

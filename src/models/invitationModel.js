@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 const invitationSchema = mongoose.Schema(
   {
     sender: {
-        type: mongoose.Schema.ObjectId,
-        ref: "User",
-        required: true,
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+      required: true,
     },
     receiver: {
       type: mongoose.Schema.ObjectId,

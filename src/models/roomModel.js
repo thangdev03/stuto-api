@@ -2,7 +2,7 @@ import mongoose, { mongo } from "mongoose";
 
 const roomSchema = mongoose.Schema(
     {
-        subject_id: {
+        subject: {
             type: mongoose.Schema.ObjectId,
             ref: "Subject"
         },
@@ -22,11 +22,11 @@ const roomSchema = mongoose.Schema(
             type: Boolean,
             default: true
         },
-        owner: {
-            type: mongoose.Schema.ObjectId,
-            ref: "User",
-            required: true
-        },
+        // owner: {
+        //     type: mongoose.Schema.ObjectId,
+        //     ref: "User",
+        //     required: true
+        // },
         participants: [
             {
                 user_id: {

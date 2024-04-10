@@ -65,9 +65,6 @@ router.put("/accept/:invitationId", async (request, response) => {
             await invitation.sender,
             await invitation.receiver
         ]});
-        console.log("sender: ", invitation.sender);
-        console.log("receiver: ", invitation.receiver);
-        console.log(newConversation);
         return user1 && user2 && newConversation && response.status(200).send({ message: "Friendship created successfully" });
     } catch (error) {
         console.log(error.message);
