@@ -39,6 +39,7 @@ router.post("/", async (request, response) => {
         name: request.body.name,
         access_camera: request.body.access_camera,
         access_mic: request.body.access_mic,
+        cover: request.body.cover,
         participants: [{
             user_id: request.body.user_id,
             join_at: new Date(),
@@ -72,6 +73,7 @@ router.put("/:roomId", async (request, response) => {
             name: request.body.name,
             access_camera: request.body.access_camera,
             access_mic: request.body.access_mic,
+            cover: request.body.cover
         }
         const result = await Room.findByIdAndUpdate(roomId, {$set: query})
         return response.status(200).send({ message: "Room updated successfully!" })
