@@ -27,6 +27,9 @@ const roomSchema = mongoose.Schema(
         //     ref: "User",
         //     required: true
         // },
+        cover: {
+            type: String
+        },
         participants: [
             {
                 user_id: {
