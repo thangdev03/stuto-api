@@ -52,6 +52,8 @@ mongoose
   });
 
 let users = [];
+const roomUsers = {};
+const socketToRoom = {};
 
 // Check if user exist in users
 const addUser = (userId, socketId) => {
@@ -85,9 +87,43 @@ io.on("connection", (socket) => {
     })
   })
 
+  //Join room (limit 4 roomUsers)
+  socket.on("join room", roomId => {
+    if (roomUsers[roomId]) {
+      const length = roomUsers[roomId].length;
+      if (length === 4) {
+        socket.emit("Room full");
+        return;
+      }
+      roomUsers[roomId].push(socket.id);
+    } else {
+      roomUsers[roomId] = [socket.id];
+    }
+    socketToRoom[socket.id] = roomId;
+    const usersInThisRoom = roomUsers[roomId].filter(id => id !== socket.id);
+
+    socket.emit("all users", usersInThisRoom)
+  })
+
+  //Start joining room
+  socket.on("sending signal", payload => {
+    io.to(payload.userToSignal).emit('user joined', {signal: payload.signal, callerId: payload.callerId})
+  })
+  
+  socket.on("returning signal", payload => {
+    io.to(payload.callerId).emit('receiving returned signal', {signal: payload.signal, id: socket.id})
+  })
+
   //User disconnect
   socket.on("disconnect", () => {
     // console.log("An user disconnected!!");
+    const roomId = socketToRoom[socket.id];
+    let room = roomUsers[roomId];
+    if (room) {
+      room = room.filter(id => id !== socket.id);
+      roomUsers[roomId] = room;
+    }
+
     removeUser(socket.id)
     io.emit("getUsers", users);
   })
