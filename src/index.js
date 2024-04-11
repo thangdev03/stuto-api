@@ -12,6 +12,7 @@ import messageRoute from"./routes/messageRoute.js"
 import inviteRoute from "./routes/invitationRoute.js"
 import friendRoute from "./routes/friendRoute.js"
 import roomRoute from "./routes/roomRoute.js"
+import wishRoute from "./routes/wishRoute.js"
 import cors from "cors"
 
 const app = express();
@@ -41,6 +42,7 @@ app.use("/messages", messageRoute);
 app.use("/invitation", inviteRoute);
 app.use("/friend", friendRoute);
 app.use("/room", roomRoute)
+app.use("/wish", wishRoute)
 
 mongoose
   .connect(mongoDBURL)

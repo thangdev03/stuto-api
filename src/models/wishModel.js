@@ -11,8 +11,8 @@ const wishSchema = mongoose.Schema(
             type: String,
             default: "Need a friend to study together"
         },
-        isActive: {
-            type: boolean,
+        is_active: {
+            type: Boolean,
             default: true
         }
     },
