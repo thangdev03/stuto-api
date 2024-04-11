@@ -122,19 +122,17 @@ router.put("/:userId/wish", async (request, response) => {
       const { subject, description, is_active } = request.body;
       const updatedUser = await User.findByIdAndUpdate(userId, {
           $set: {
-            wish: {$set: {
-              subject,
-              description,
-              is_active
-            }}
+            "wish.subject": subject,
+            "wish.description": description,
+            "wish.is_active": is_active
           }
-      })
+      });
       if (!updatedUser) {
-          response.status(400).send({ message: "Update Wish failed" })
+          return response.status(400).send({ message: "Update Wish failed" })
       }
-      response.status(200).send({ message: "Update Wish successfully!" })
+      return response.status(200).send({ message: "Update Wish successfully!" })
   } catch (error) {
-      response.status(500).send({ message: error.message })        
+      return response.status(500).send({ message: error.message })        
   }
 })
 
