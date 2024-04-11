@@ -40,13 +40,19 @@ router.get("/sent/:userId", async (request, response) => {
 router.get("/detail/:senderId/:receiverId", async (request, response) => {
     try {
         const {senderId, receiverId} = request.params;
+        console.log("senderId: ",senderId)
+        console.log("receiverId: ",receiverId)
         const ObjectId = mongoose.Types.ObjectId;
         const invitation = await Invitation.findOne({
             $or: [
-                {sender: new ObjectId(senderId), receiver: new ObjectId(receiverId), status: "pending"},
-                {sender: new ObjectId(receiverId), receiver: new ObjectId(senderId), status: "pending"},
+                {sender: new ObjectId(senderId), receiver: new ObjectId(receiverId)},
+                {sender: new ObjectId(receiverId), receiver: new ObjectId(senderId)},
             ]
         })
+        if (!invitation) {
+            return response.status(404).send({ message: "invitation not found" })
+        }
+        console.log("invitation: ",invitation)
         return response.status(200).send(invitation);
     } catch (error) {
         console.log(error.message);
