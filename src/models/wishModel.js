@@ -2,14 +2,18 @@ import mongoose from "mongoose";
 
 const wishSchema = mongoose.Schema(
     {
-        user_id: {
+        // user_id: {
+        //     type: mongoose.Schema.ObjectId,
+        //     required: true,
+        //     unique: true
+        // },
+        subject: {
             type: mongoose.Schema.ObjectId,
-            required: true,
-            unique: true
+            default: null
         },
         description: {
             type: String,
-            default: "Need a friend to study together"
+            default: "Need a friend to study better"
         },
         is_active: {
             type: Boolean,

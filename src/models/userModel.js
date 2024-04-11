@@ -44,7 +44,12 @@ const userSchema = mongoose.Schema(
     friends: [{
       type: mongoose.Schema.ObjectId,
       ref: "User"
-    }]
+    }],
+    wish: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Wish",
+      default: null
+    }
   },
   {
     timestamps: true,
