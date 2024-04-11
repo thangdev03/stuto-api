@@ -1,4 +1,5 @@
-import express, { request, response } from "express";
+import express from "express";
+import mongoose from "mongoose";
 import { User } from "../models/userModel.js";
 import { Invitation } from "../models/invitationModel.js";
 
@@ -22,17 +23,16 @@ router.get("/:userId", async (request, response) => {
 // Unfriend and delete relative invitation
 router.delete("/", async (request, response) => {
     try {
-        const currentUser = await User.findByIdAndUpdate(request.body.currentUserId, {$pull: {
-            friends: request.body.friendId
+        const ObjectId = mongoose.Types.ObjectId;
+        const {currentUserId, friendId, invitationId} = request.body;
+        const currentUser = await User.findByIdAndUpdate(currentUserId, {$pull: {
+            friends: friendId
         }});
-        const friendUser = await User.findByIdAndUpdate(request.body.friendId, {$pull: {
-            friends: request.body.currentUserId
+        const friendUser = await User.findByIdAndUpdate(friendId, {$pull: {
+            friends: currentUserId
         }});
-        const resultDeleteInvite = Invitation.findOneAndDelete({$or: [
-            { sender: request.body.currentUserId, receiver: request.body.friendId },
-            { sender: request.body.friendId, receiver: request.body.currentUserId },
-        ]});
-        if (!currentUser && !friendUser && !resultDeleteInvite) {
+        const resultDeleteInvite = await Invitation.findByIdAndDelete(invitationId);
+        if (!currentUser || !friendUser || !resultDeleteInvite) {
             return response.status(404).send({ message: "Something went wrong when deleting!" });
         }
         return response.status(200).send({ message: "Delete friend relationship successfully!" });
