@@ -46,9 +46,18 @@ const userSchema = mongoose.Schema(
       ref: "User"
     }],
     wish: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Wish",
-      default: null
+      subject: {
+        type: mongoose.Schema.ObjectId,
+        default: null
+      },
+      description: {
+          type: String,
+          default: "Need a friend to study better"
+      },
+      is_active: {
+          type: Boolean,
+          default: true
+      }
     }
   },
   {

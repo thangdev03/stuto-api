@@ -39,7 +39,14 @@ router.post("/register", async (request, response) => {
 // Route for Get all User
 router.get("/", async (request, response) => {
   try {
-    const usersList = await User.find({}).populate("major");
+    const usersList = await User.find({}).populate("major")
+    .populate({
+      path: "wish",
+      populate: {
+        path: "subject",
+        model: "Subject"
+      }
+    });
     const users = []
     for (const index in usersList) {
       const account = await Account.findOne({user_id: usersList[index].id});
@@ -107,6 +114,29 @@ router.put("/:id", async (request, response) => {
     response.status(500).send({ message: error.message })
   }
 });
+
+// Route for Update User's Wish
+router.put("/:userId/wish", async (request, response) => {
+  try {
+      const { userId } = request.params;
+      const { subject, description, is_active } = request.body;
+      const updatedUser = await User.findByIdAndUpdate(userId, {
+          $set: {
+            wish: {$set: {
+              subject,
+              description,
+              is_active
+            }}
+          }
+      })
+      if (!updatedUser) {
+          response.status(400).send({ message: "Update Wish failed" })
+      }
+      response.status(200).send({ message: "Update Wish successfully!" })
+  } catch (error) {
+      response.status(500).send({ message: error.message })        
+  }
+})
 
 // Route for Delete User and Account
 router.delete("/:id", async (request, response) => {
