@@ -64,7 +64,15 @@ router.get("/", async (request, response) => {
 router.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const user = await User.findById(id).populate("major");
+    const user = await User.findById(id)
+    .populate("major")
+    .populate({
+      path: "wish",
+      populate: {
+        path: "subject",
+        model: "Subject"
+      }
+    });
     if (!user) {
       return response.status(404).send({ message: "User not found!" });
     }
