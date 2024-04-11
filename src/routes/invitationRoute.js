@@ -86,7 +86,7 @@ router.put("/accept/:invitationId", async (request, response) => {
         // }
         const user1 = await User.findByIdAndUpdate(invitation.sender, {$push: {friends: invitation.receiver}});
         const user2 = await User.findByIdAndUpdate(invitation.receiver, {$push: {friends: invitation.sender}});
-        const existConversation = await Conversation.findOne({members: {$in: [invitation.sender, invitation.receiver]}})
+        const existConversation = await Conversation.findOne({members: {$all: [invitation.sender, invitation.receiver]}})
         if (!existConversation) {
             const newConversation = await Conversation.create({members: [
                 await invitation.sender,
