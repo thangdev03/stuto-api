@@ -1,5 +1,6 @@
 import express from "express";
 import { Major } from "../models/majorModel.js"
+import { User } from "../models/userModel.js";
 
 const router = express.Router();
 
@@ -23,6 +24,20 @@ router.post("/", async (request, response) => {
 router.get("/", async (request, response) => {
   try {
     const majors = await Major.find({});
+    const referenceCount = await User.aggregate([
+      {
+        $group: {
+          _id: '$major',
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    majors.forEach(major => {
+      const countObj = referenceCount.find(item => item._id != null && (item._id.toString() === major._id.toString()));
+      major.referenceCount = countObj? countObj.count : 0;
+    });
+
     return response.status(200).json({
       data: majors
     });
@@ -36,7 +51,7 @@ router.get("/", async (request, response) => {
 router.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const major = await Major.findById(id);
+    const major = await Major.findById(id)
     if (!major) {
       return response.status(404).send({ message: "Major not found!" });
     }

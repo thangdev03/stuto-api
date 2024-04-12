@@ -11,6 +11,10 @@ const majorSchema = mongoose.Schema(
             type: String,
             enum: ["Chính quy", "Tiên tiến", "Quốc tế"],
             default: "Chính quy"
+        },
+        referenceCount: {
+            type: Number,
+            default: 0
         }
     }
 );
