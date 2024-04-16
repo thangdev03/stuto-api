@@ -1,7 +1,24 @@
 import express from "express";
 import { Room } from "../models/roomModel.js";
+import { User } from "../models/userModel.js";
 
 const router = express.Router();
+
+// Get the total number of rooms
+router.get("/statistic/:userId", async (request, response) => {
+  try {
+    const { userId } = request.params;
+    const admin = await User.findById(userId);
+    if (admin) {
+      const rooms = await Room.find({});
+      return response.status(200).json(rooms);
+    } else {
+      return response.status(405).send({ message: "Sorry, you are not allowed for this API route." });
+    }
+  } catch (error) {
+    response.status(500).send({ message: error.message });
+  }
+})
 
 // Get all room of an user
 router.get("/all/:userId", async (request, response) => {
