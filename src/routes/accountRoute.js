@@ -55,12 +55,13 @@ router.post('/login', async (request, response) => {
       } 
     );
     result? console.log("update success", result) : console.log("update failed")
-    return response.status(200).json({ token: token, name: user.name, role: account.role, id: user._id, avatar: user.avatar })
+    return response.status(200).json({ token: token, name: user.name, role: account.role, id: user._id, avatar: user.avatar, is_restricted: account.is_restricted })
   } else {
     return response.status(404).json({ token: false })
   }
 });
 
+// Route for block user by admin
 router.put("/", async (request, response) => {
   try {
     var result;
