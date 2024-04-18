@@ -115,6 +115,25 @@ router.put("/:id", async (request, response) => {
   }
 });
 
+// Route for update User's Avatar
+router.put("/:userId/avatar", async (request, response) => {
+  try {
+    const { userId } = request.params;
+    const { avatar } = request.body;
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+        $set: {
+          avatar: avatar
+        }
+    });
+    if (!updatedUser) {
+        return response.status(400).send({ message: "Update avatar failed" })
+    }
+    return response.status(200).send({ message: "Update avatar successfully!" })
+} catch (error) {
+    return response.status(500).send({ message: error.message })        
+}
+})
+
 // Route for Update User's Wish
 router.put("/:userId/wish", async (request, response) => {
   try {
