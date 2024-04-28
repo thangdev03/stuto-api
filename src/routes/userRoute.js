@@ -4,6 +4,7 @@ import { User } from "../models/userModel.js"
 import { Account } from "../models/accountModel.js";
 import { Message } from "../models/messageModel.js";
 import { Conversation } from "../models/conversationModel.js";
+import { Document } from "mongoose";
 
 const router = express.Router();
 
@@ -39,7 +40,18 @@ router.post("/register", async (request, response) => {
 // Route for Get all User
 router.get("/", async (request, response) => {
   try {
-    const usersList = await User.find({}).populate("major")
+    const {page = 1, limit = 10, userId} = request.query
+    const options = {
+      limit,
+      skip: (page - 1) * limit
+    };
+    const query = {
+      _id: {$ne: userId}
+    };
+
+    const total = await User.countDocuments({});
+    const totalPages = Math.ceil(total / limit);
+    const usersList = await User.find(query, null, options).populate("major")
     .populate({
       path: "wish",
       populate: {
@@ -47,6 +59,7 @@ router.get("/", async (request, response) => {
         model: "Subject"
       }
     });
+
     const users = []
     for (const index in usersList) {
       const account = await Account.findOne({user_id: usersList[index].id});
@@ -58,8 +71,17 @@ router.get("/", async (request, response) => {
         })
       } 
     }
+
+    const paginatedUsers = {
+      users,
+      total,
+      limit,
+      page,
+      totalPages
+    }
+
     return response.status(200).json({
-      data: users
+      paginatedUsers
     });
   } catch (error) {
     console.log(error.message);
